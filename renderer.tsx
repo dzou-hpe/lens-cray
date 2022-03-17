@@ -1,5 +1,5 @@
 import { Renderer } from "@k8slens/extensions";
-import { ExampleIcon, DashboardPage } from "./globalPages/dashboard";
+import { ExampleIcon, DashboardPage, CredentialsPage } from "./globalPages";
 import React from "react";
 
 export default class LensCrayExtension extends Renderer.LensExtension {
@@ -8,6 +8,12 @@ export default class LensCrayExtension extends Renderer.LensExtension {
       id: "dashboard",
       components: {
         Page: () => <DashboardPage extension={this} />,
+      },
+    },
+    {
+      id: "credentials",
+      components: {
+        Page: () => <CredentialsPage extension={this} />,
       },
     },
   ];
@@ -24,6 +30,14 @@ export default class LensCrayExtension extends Renderer.LensExtension {
       parentId: "cray",
       target: { pageId: "dashboard" },
       title: "Dashboard",
+      components: {
+        Icon: ExampleIcon,
+      },
+    },
+    {
+      parentId: "cray",
+      target: { pageId: "credentials" },
+      title: "Credentials",
       components: {
         Icon: ExampleIcon,
       },

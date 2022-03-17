@@ -25,14 +25,15 @@
     "link": "ln -s $(PWD) ${HOME}/.k8slens/extensions/cray"
   },
   "dependencies": {
+    "mobx": "^6.5.0",
     "react-open-doodles": "^1.0.5"
   },
   "devDependencies": {
     "@k8slens/extensions": "^5.0.0",
+    "@types/node": "^12.0.0",
+    "@types/react": "^16.9.35",
     "ts-loader": "^8.0.4",
     "typescript": "^4.0.3",
-    "@types/react": "^16.9.35",
-    "@types/node": "^12.0.0",
     "webpack": "^4.44.2",
     "webpack-cli": "^3.3.11"
   },
