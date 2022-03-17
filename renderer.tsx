@@ -1,13 +1,13 @@
 import { Renderer } from "@k8slens/extensions";
-import { ExampleIcon, ExamplePage } from "./src/example-page";
+import { ExampleIcon, DashboardPage } from "./globalPages/dashboard";
 import React from "react";
 
-export default class ExampleExtension extends Renderer.LensExtension {
+export default class LensCrayExtension extends Renderer.LensExtension {
   clusterPages = [
     {
-      id: "dashboard", // hello-world:foo
+      id: "dashboard",
       components: {
-        Page: () => <ExamplePage extension={this} />,
+        Page: () => <DashboardPage extension={this} />,
       },
     },
   ];
@@ -30,5 +30,7 @@ export default class ExampleExtension extends Renderer.LensExtension {
     },
   ];
 
-  async onActivate() {}
+  async onActivate() {
+    console.log("cray plugin activated");
+  }
 }

@@ -1,6 +1,6 @@
 import { Main } from "@k8slens/extensions";
 
-export default class ExampleExtensionMain extends Main.LensExtension {
+export default class LensCrayExtensionMain extends Main.LensExtension {
   onActivate() {
     console.log('helloworld-sample activated');
   }

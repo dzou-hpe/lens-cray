@@ -7,7 +7,7 @@ export function ExampleIcon(props: Renderer.Component.IconProps) {
   return <Renderer.Component.Icon {...props} material="pages" tooltip={path.basename(__filename)}/>
 }
 
-export class ExamplePage extends React.Component<{ extension: Renderer.LensExtension }> {
+export class DashboardPage extends React.Component<{ extension: Renderer.LensExtension }> {
   render() {
     const doodleStyle = {
       width: "200px"
