@@ -2,8 +2,15 @@ import { Renderer, Common } from "@k8slens/extensions";
 import React from "react";
 import kebabCase from "lodash/kebabCase";
 import upperFirst from "lodash/upperFirst";
-
+import { makeObservable, observable } from "mobx";
+import { observer } from "mobx-react";
+@observer
 export class K8sNodes extends React.Component<{}> {
+  constructor() {
+    super({});
+    makeObservable(this);
+  }
+
   renderConditions(node: Renderer.K8sApi.Node) {
     if (!node.status.conditions) {
       return null;
@@ -41,12 +48,10 @@ export class K8sNodes extends React.Component<{}> {
       Renderer.K8sApi.apiManager.getStore(
         Renderer.K8sApi.nodesApi
       ) as unknown as Renderer.K8sApi.NodesStore;
-
     enum columnId {
       name = "name",
       conditions = "condition",
       roles = "roles",
-      age = "age",
       version = "version",
       kernelVersion = "kernerlVersion",
     }
@@ -65,7 +70,6 @@ export class K8sNodes extends React.Component<{}> {
             [columnId.name]: (node) => node.getName(),
             [columnId.conditions]: (node) => node.getNodeConditionText(),
             [columnId.roles]: (node) => node.getRoleLabels(),
-            [columnId.age]: (node) => node.getTimeDiffFromNow(),
             [columnId.version]: (node) => node.getKubeletVersion(),
             [columnId.kernelVersion]: (node) =>
               node.status.nodeInfo.kernelVersion,
@@ -109,12 +113,6 @@ export class K8sNodes extends React.Component<{}> {
               sortBy: columnId.conditions,
               id: columnId.conditions,
             },
-            {
-              title: "Age",
-              className: "age",
-              sortBy: columnId.age,
-              id: columnId.age,
-            },
           ]}
           renderTableContents={(node) => {
             return [
@@ -123,7 +121,6 @@ export class K8sNodes extends React.Component<{}> {
               node.status.nodeInfo.kubeletVersion,
               node.status.nodeInfo.kernelVersion,
               this.renderConditions(node),
-              node.getAge(),
             ];
           }}
         />
