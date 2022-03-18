@@ -8,8 +8,6 @@ enum columnId {
   name = "name",
   namespace = "namespace",
   status = "status",
-  leader = "leader",
-  lag = "lag",
   pods = "pods",
 }
 
@@ -118,18 +116,6 @@ export class PostgresqlClusters extends React.Component<{}> {
               sortBy: columnId.status,
               id: columnId.status,
             },
-            isNamespaced && {
-              title: "Leader",
-              className: "leader",
-              sortBy: columnId.leader,
-              id: columnId.leader,
-            },
-            isNamespaced && {
-              title: "Lag",
-              className: "lag",
-              sortBy: columnId.lag,
-              id: columnId.lag,
-            },
           ]}
           renderTableContents={(crdInstance) => {
             return [
@@ -146,8 +132,6 @@ export class PostgresqlClusters extends React.Component<{}> {
               >
                 {crdInstance.status.PostgresClusterStatus}
               </div>,
-              "TODO",
-              "TODO",
             ];
           }}
           failedToLoadMessage={
