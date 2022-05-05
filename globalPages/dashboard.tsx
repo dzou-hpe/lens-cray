@@ -5,6 +5,7 @@ import kebabCase from "lodash/kebabCase";
 import upperFirst from "lodash/upperFirst";
 import { K8sNodes } from "../components/nodes";
 import { PostgresqlClusters } from "../components/postgres";
+import { EtcdClusters } from "../components/etcd";
 
 export function ExampleIcon(props: Renderer.Component.IconProps) {
   return (
@@ -25,6 +26,7 @@ export class DashboardPage extends React.Component<{
         <K8sNodes />
 
         <PostgresqlClusters />
+        <EtcdClusters />
       </div>
     );
   }
