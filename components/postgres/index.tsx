@@ -60,7 +60,7 @@ export class PostgresqlClusters extends React.Component<{}> {
       Renderer.K8sApi.crdApi
     ) as unknown as Renderer.K8sApi.CRDStore;
     const crd = store.getByGroup("acid.zalan.do", "postgresqls");
-
+    
     if (!crd) {
       return null;
     }
@@ -83,7 +83,7 @@ export class PostgresqlClusters extends React.Component<{}> {
               customResource.status.PostgresClusterStatus,
           }}
           searchFilters={[(customResource) => customResource.getSearchFields()]}
-          renderHeaderTitle={crd.getResourceKind()}
+          renderHeaderTitle="Postgresql Clusters"
           customizeHeader={({ searchProps, ...headerPlaceholders }) => ({
             searchProps: {
               ...searchProps,

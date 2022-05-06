@@ -83,7 +83,7 @@ export class EtcdClusters extends React.Component<{}> {
               customResource.status.PostgresClusterStatus,
           }}
           searchFilters={[(customResource) => customResource.getSearchFields()]}
-          renderHeaderTitle={crd.getResourceKind()}
+          renderHeaderTitle="Etcd Clusters"
           customizeHeader={({ searchProps, ...headerPlaceholders }) => ({
             searchProps: {
               ...searchProps,
