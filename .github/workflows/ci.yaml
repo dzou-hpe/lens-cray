@@ -18,7 +18,7 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 14
-          cache: 'yarn'
+          cache: "yarn"
       - name: install packages
         run: yarn install
       - name: Build
@@ -49,6 +49,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./cray-lens-cray-${{ env.GITHUB_TAG }}.tgz
+          asset_path: /home/runner/work/lens-cray/lens-cray/cray-lens-cray-${{ env.GITHUB_TAG }}.tgz
           asset_name: cray-lens-cray-${{ env.GITHUB_TAG }}.tgz
           asset_content_type: application/octet-stream
