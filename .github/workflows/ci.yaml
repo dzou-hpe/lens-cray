@@ -5,7 +5,7 @@ on:
     branches:
       - master
 jobs:
-  test:
+  ship:
     runs-on: ${{matrix.os}}
     strategy:
       matrix:
@@ -24,4 +24,6 @@ jobs:
       - name: Build
         run: yarn build
       - name: release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: yarn run semantic-release
