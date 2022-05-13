@@ -40,7 +40,7 @@ jobs:
       - name: Get release tag from git revision
         run: |
           GITHUB_REF=${{ github.ref }}
-          GITHUB_TAG=${GITHUB_REF#refs/tags/v}
+          GITHUB_TAG=$(cat package.json | jq -r '.version')
           echo "$GITHUB_REF -> $GITHUB_TAG"
           echo "GITHUB_TAG=$GITHUB_TAG" >> $GITHUB_ENV
       - name: Upload GitHub assets
