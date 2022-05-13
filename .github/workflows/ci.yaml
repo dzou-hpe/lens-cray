@@ -23,7 +23,32 @@ jobs:
         run: yarn install
       - name: Build
         run: yarn build
-      - name: release
+      - name: release - pack
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: yarn run semantic-release
+        run: yarn pack
+      - name: Create GitHub release
+        uses: actions/create-release@v1
+        id: create_release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: ${{ github.ref }}
+          draft: false
+          prerelease: true
+      - name: Get release tag from git revision
+        run: |
+          GITHUB_REF=${{ github.ref }}
+          GITHUB_TAG=${GITHUB_REF#refs/tags/v}
+          echo "$GITHUB_REF -> $GITHUB_TAG"
+          echo "GITHUB_TAG=$GITHUB_TAG" >> $GITHUB_ENV
+      - name: Upload GitHub assets
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: cray-lens-cray-${{ env.GITHUB_TAG }}.tgz
+          asset_name: cray-lens-cray-${{ env.GITHUB_TAG }}.tgz
+          asset_content_type: application/octet-stream
