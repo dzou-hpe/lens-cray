@@ -27,28 +27,13 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: yarn pack
-      - name: Create GitHub release
-        uses: actions/create-release@v1
-        id: create_release
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: ${{ github.ref }}
-          release_name: ${{ github.ref }}
-          draft: false
-          prerelease: true
       - name: Get release tag from git revision
         run: |
-          GITHUB_REF=${{ github.ref }}
           GITHUB_TAG=$(cat package.json | jq -r '.version')
-          echo "$GITHUB_REF -> $GITHUB_TAG"
-          echo "GITHUB_TAG=$GITHUB_TAG" >> $GITHUB_ENV
-      - name: Upload GitHub assets
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/')
         with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: /home/runner/work/lens-cray/lens-cray/cray-lens-cray-${{ env.GITHUB_TAG }}.tgz
-          asset_name: cray-lens-cray-${{ env.GITHUB_TAG }}.tgz
-          asset_content_type: application/octet-stream
+          files: |
+            cray-lens-cray-${{ env.GITHUB_TAG }}.tgz
+          prerelease: true
