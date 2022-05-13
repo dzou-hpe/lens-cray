@@ -23,7 +23,7 @@
     "build": "yarn run clean && webpack",
     "clean": "rm -rf ./dist",
     "link": "ln -s $(PWD) ${HOME}/.k8slens/extensions/cray",
-    "semantic-release": "semantic-release"
+    "release": "git tag v$(cat package.json | jq -r '.version')"
   },
   "dependencies": {
     "@types/jsonpath": "^0.2.0",
