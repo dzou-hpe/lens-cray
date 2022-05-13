@@ -1,6 +1,7 @@
 import { Renderer } from "@k8slens/extensions";
 import { ExampleIcon, DashboardPage, CredentialsPage } from "./globalPages";
 import React from "react";
+import { NodeMenu, NodeMenuProps } from "./components/nodeMenuExt";
 
 export default class LensCrayExtension extends Renderer.LensExtension {
   clusterPages = [
@@ -40,6 +41,16 @@ export default class LensCrayExtension extends Renderer.LensExtension {
       title: "Credentials",
       components: {
         Icon: ExampleIcon,
+      },
+    },
+  ];
+
+  kubeObjectMenuItems = [
+    {
+      kind: "Node",
+      apiVersions: ["v1"],
+      components: {
+        MenuItem: (props: NodeMenuProps) => <NodeMenu {...props} />,
       },
     },
   ];
