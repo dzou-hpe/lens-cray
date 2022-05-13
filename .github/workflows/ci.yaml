@@ -1,0 +1,28 @@
+name: Build and Release
+
+on:
+  push:
+    branches:
+      - master
+jobs:
+  test:
+    runs-on: ${{matrix.os}}
+    strategy:
+      matrix:
+        os:
+          - ubuntu-18.04
+        node-version:
+          - 14.x
+    steps:
+      - name: Checkout
+        uses: actions/checkout@master
+      - name: setup node ${{matrix.node-version}}
+        uses: actions/setup-node@v1.4.1
+        with:
+          node-version: ${{matrix.node-version}}
+      - name: install packages
+        run: yarn install
+      - name: Build
+        run: yarn build
+      - name: release
+        run: yarn run semantic-release
