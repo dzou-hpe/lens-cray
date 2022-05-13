@@ -2,8 +2,8 @@ name: Build and Release
 
 on:
   push:
-    branches:
-      - master
+    tags:
+      - "v*"
 jobs:
   ship:
     runs-on: ${{matrix.os}}
@@ -49,6 +49,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: cray-lens-cray-${{ env.GITHUB_TAG }}.tgz
+          asset_path: ./cray-lens-cray-${{ env.GITHUB_TAG }}.tgz
           asset_name: cray-lens-cray-${{ env.GITHUB_TAG }}.tgz
           asset_content_type: application/octet-stream
