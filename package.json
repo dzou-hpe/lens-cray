@@ -11,7 +11,7 @@
   "description": "Lens extension for Cray CSM",
   "repository": {
     "type": "git",
-    "url": "https://github.com/lensapp/lens-extension-samples.git"
+    "url": "https://github.com/dzou-hpe/lens-cray"
   },
   "engines": {
     "lens": "^5.0.0"
@@ -22,7 +22,8 @@
     "start": "webpack --watch",
     "build": "yarn run clean && webpack",
     "clean": "rm -rf ./dist",
-    "link": "ln -s $(PWD) ${HOME}/.k8slens/extensions/cray"
+    "link": "ln -s $(PWD) ${HOME}/.k8slens/extensions/cray",
+    "semantic-release": "semantic-release"
   },
   "dependencies": {
     "@types/jsonpath": "^0.2.0",
@@ -38,6 +39,7 @@
     "@types/lodash": "^4.14.180",
     "@types/node": "^12.0.0",
     "@types/react": "^16.9.35",
+    "semantic-release": "^19.0.2",
     "ts-loader": "^8.0.4",
     "typescript": "^4.0.3",
     "webpack": "^4.44.2",
