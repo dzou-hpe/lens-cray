@@ -1,5 +1,5 @@
 import { Renderer } from "@k8slens/extensions";
-import { ExampleIcon, DashboardPage, CredentialsPage } from "./globalPages";
+import { ExampleIcon, DashboardPage, CredentialsPage } from "./clusterPages";
 import React from "react";
 import { NodeMenu, NodeMenuProps } from "./components/nodeMenuExt";
 
