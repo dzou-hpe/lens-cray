@@ -1,7 +1,7 @@
 import { Renderer } from "@k8slens/extensions";
 import React from "react";
 
-export class CredentialsPage extends React.Component<{
+export class LayoutPage extends React.Component<{
   extension: Renderer.LensExtension;
 }> {
   render() {
@@ -10,7 +10,7 @@ export class CredentialsPage extends React.Component<{
     };
     return (
       <div className="flex column gaps align-flex-start">
-        <h1>Credentials</h1>
+        <h1>Layout</h1>
       </div>
     );
   }
