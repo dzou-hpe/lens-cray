@@ -38,7 +38,7 @@ export default class LensCrayExtension extends Renderer.LensExtension {
     {
       parentId: "cray",
       target: { pageId: "layout" },
-      title: "Layout",
+      title: "System Layout",
       components: {
         Icon: ExampleIcon,
       },
