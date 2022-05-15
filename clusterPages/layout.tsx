@@ -1,11 +1,11 @@
 import { Renderer } from "@k8slens/extensions";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import ForceGraph2D from "react-force-graph-2d";
-
 // Build a "user interface" that uses the observable state.
 export const LayoutPage = (props: any) => {
   const { extension } = props;
   const [state, setState] = useState({ nodes: [], links: [] });
+  const fgRef = useRef();
   useEffect(() => {
     const apiPath = `/api-kube/api/v1/namespaces/services/services/http:cray-sls:80/proxy/v1/hardware`;
     const clusterId = Renderer.Catalog.catalogEntities.activeEntity.getId();
@@ -24,18 +24,35 @@ export const LayoutPage = (props: any) => {
         resJson.forEach((obj: any) => {
           nodes.push({
             id: obj.Xname,
-            group:
-              obj.Type + "-" + obj.ExtraProperties?.Role ||
-              "" + "-" + obj.ExtraProperties?.SubRole ||
-              "" + "-" + obj.ExtraProperties?.Brand ||
-              "",
+            group: obj.TypeString + obj?.ExtraProperties?.Role || "",
             value: obj,
           });
         });
+        console.log(nodes);
 
         // add links
         resJson.forEach((obj: any) => {
-          if (nodes.findIndex((node) => node.Xname === obj.Parent) === -1) {
+          // parse xnames
+          const xnames = obj.Xname.match(/[a-z]\d*/gm);
+          // handle xnames
+          let currentName = "";
+          xnames.forEach((xname: string) => {
+            if (currentName) {
+              links.push({
+                source: currentName,
+                target: currentName + xname,
+              });
+            }
+            currentName += xname;
+            if (nodes.findIndex((node) => node.id === currentName) === -1) {
+              nodes.push({
+                id: currentName,
+                group: "missing",
+              });
+            }
+          });
+
+          if (nodes.findIndex((node) => node.id === obj.Parent) === -1) {
             nodes.push({
               id: obj.Parent,
               group: "missing",
@@ -45,6 +62,21 @@ export const LayoutPage = (props: any) => {
             source: obj.Xname,
             target: obj.Parent,
           });
+
+          if (obj?.Children?.length > 0) {
+            obj.Children.forEach((child: string) => {
+              if (nodes.findIndex((node) => node.id === child) === -1) {
+                nodes.push({
+                  id: child,
+                  group: "missing",
+                });
+              }
+              links.push({
+                source: obj.Xname,
+                target: child,
+              });
+            });
+          }
         });
 
         setState({ nodes, links });
@@ -67,14 +99,23 @@ export const LayoutPage = (props: any) => {
   return (
     <ForceGraph2D
       graphData={state}
+      ref={fgRef}
       width={window.innerWidth - 70 - sidebarWidth}
       height={sidebarHeight - 100}
       linkWidth={(link) => 4}
       nodeAutoColorBy="group"
       backgroundColor="white"
+      onNodeClick={(node: any) => {
+        console.log(node.value);
+      }}
+      nodeVal="value"
+      nodeLabel={(node: any) => {
+        return node.value;
+      }}
+      linkDirectionalParticles={1}
       nodeCanvasObject={(node: any, ctx, globalScale) => {
-        const label: string =
-          node?.value?.Type || "" + ` (${node.id as string})`;
+        const label: string = getDisplayName(node);
+
         const fontSize = 24 / globalScale;
 
         const r = 1.3;
@@ -100,3 +141,30 @@ export const LayoutPage = (props: any) => {
     />
   );
 };
+function getDisplayName(node: any): string {
+  if (node.group === "missing") {
+    return "";
+  }
+
+  if (node?.value?.ExtraProperties?.Role === "Management") {
+    return `${node?.value?.ExtraProperties?.SubRole} -  ${node?.value?.ExtraProperties.Aliases[0]}`;
+  }
+
+  if (node?.value?.ExtraProperties?.Role === "Compute") {
+    return `${node?.value?.ExtraProperties?.Role} -  ${node?.value?.ExtraProperties.Aliases[0]}`;
+  }
+
+  if (node?.value?.ExtraProperties?.Role === "Application") {
+    return `${node?.value?.ExtraProperties?.SubRole} -  ${node?.value?.ExtraProperties.Aliases[0]}`;
+  }
+
+  if (node?.value?.TypeString === "MgmtHLSwitch") {
+    return `${node?.value?.ExtraProperties?.Brand} -  ${node?.value?.ExtraProperties.Aliases[0]}`;
+  }
+
+  if (node?.value?.TypeString === "Cabinet") {
+    return `${node?.value?.Class} Cabinet`;
+  }
+
+  return node.id;
+}
