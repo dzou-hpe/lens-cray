@@ -22,60 +22,63 @@ export const LayoutPage = (props: any) => {
       res.json().then((resJson) => {
         // add nodes
         resJson.forEach((obj: any) => {
-          nodes.push({
-            id: obj.Xname,
-            group: obj.TypeString + obj?.ExtraProperties?.Role || "",
-            value: obj,
-          });
+          if (nodeTypeCheck(obj)) {
+            nodes.push({
+              id: obj.Xname,
+              group: obj.TypeString + obj?.ExtraProperties?.Role || "",
+              value: obj,
+            });
+          }
         });
-        console.log(nodes);
 
         // add links
         resJson.forEach((obj: any) => {
-          // parse xnames
-          const xnames = obj.Xname.match(/[a-z]\d*/gm);
-          // handle xnames
-          let currentName = "";
-          xnames.forEach((xname: string) => {
-            if (currentName) {
-              links.push({
-                source: currentName,
-                target: currentName + xname,
-              });
-            }
-            currentName += xname;
-            if (nodes.findIndex((node) => node.id === currentName) === -1) {
-              nodes.push({
-                id: currentName,
-                group: "missing",
-              });
-            }
-          });
-
-          if (nodes.findIndex((node) => node.id === obj.Parent) === -1) {
-            nodes.push({
-              id: obj.Parent,
-              group: "missing",
-            });
-          }
-          links.push({
-            source: obj.Xname,
-            target: obj.Parent,
-          });
-
-          if (obj?.Children?.length > 0) {
-            obj.Children.forEach((child: string) => {
-              if (nodes.findIndex((node) => node.id === child) === -1) {
+          if (nodeTypeCheck(obj)) {
+            // parse xnames
+            const xnames = obj.Xname.match(/[a-z]\d*/gm);
+            // handle xnames
+            let currentName = "";
+            xnames.forEach((xname: string) => {
+              if (currentName) {
+                links.push({
+                  source: currentName,
+                  target: currentName + xname,
+                });
+              }
+              currentName += xname;
+              if (nodes.findIndex((node) => node.id === currentName) === -1) {
                 nodes.push({
-                  id: child,
+                  id: currentName,
                   group: "missing",
                 });
               }
-              links.push({
-                source: obj.Xname,
-                target: child,
-              });
             });
+
+            if (nodes.findIndex((node) => node.id === obj.Parent) === -1) {
+              nodes.push({
+                id: obj.Parent,
+                group: "missing",
+              });
+            }
+            links.push({
+              source: obj.Xname,
+              target: obj.Parent,
+            });
+
+            if (obj?.Children?.length > 0) {
+              obj.Children.forEach((child: string) => {
+                if (nodes.findIndex((node) => node.id === child) === -1) {
+                  nodes.push({
+                    id: child,
+                    group: "missing",
+                  });
+                }
+                links.push({
+                  source: obj.Xname,
+                  target: child,
+                });
+              });
+            }
           }
         });
 
@@ -109,9 +112,6 @@ export const LayoutPage = (props: any) => {
         console.log(node.value);
       }}
       nodeVal="value"
-      nodeLabel={(node: any) => {
-        return node.value;
-      }}
       linkDirectionalParticles={1}
       nodeCanvasObject={(node: any, ctx, globalScale) => {
         const label: string = getDisplayName(node);
@@ -136,7 +136,21 @@ export const LayoutPage = (props: any) => {
         ctx.font = `${fontSize}px Arial`;
         ctx.textBaseline = "middle";
         ctx.fillStyle = node.color;
-        ctx.fillText(label, node.x, node.y + r + 10 / globalScale);
+        ctx.fillText(label, node.x, node.y + 2 * r + 10 / globalScale);
+      }}
+      nodePointerAreaPaint={(node: any, color, ctx) => {
+        const r = 1.3;
+
+        if (node.value) {
+          ctx.beginPath();
+          ctx.lineWidth = 2;
+          ctx.arc(node.x, node.y, r + 3, 0, 2 * Math.PI, false);
+          ctx.strokeStyle = color;
+          ctx.stroke();
+          ctx.fillStyle = color;
+          ctx.fill();
+          ctx.closePath();
+        }
       }}
     />
   );
@@ -166,5 +180,18 @@ function getDisplayName(node: any): string {
     return `${node?.value?.Class} Cabinet`;
   }
 
+  if (node?.value?.TypeString === "RouterBMC") {
+    return `BMC - Router`;
+  }
+
+  if (node?.value?.TypeString === "ChassisBMC") {
+    return `BMC - Chassis`;
+  }
+
   return node.id;
+}
+function nodeTypeCheck(obj: any) {
+  return (
+    obj.TypeString !== "MgmtSwitchConnector" && obj.TypeString !== "MgmtSwitch"
+  );
 }
