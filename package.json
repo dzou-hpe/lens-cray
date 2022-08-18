@@ -14,7 +14,7 @@
     "url": "https://github.com/dzou-hpe/lens-cray"
   },
   "engines": {
-    "lens": "^5.0.0"
+    "lens": "^6.0.0"
   },
   "main": "dist/main.js",
   "renderer": "dist/renderer.js",
