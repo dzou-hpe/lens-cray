@@ -31,7 +31,7 @@ export function NodeMenu(props: NodeMenuProps) {
   const getXname = async () => {
     const apiPath = `/api-kube/api/v1/namespaces/services/services/http:cray-sls:80/proxy/v1/search/hardware?extra_properties.Role=Management`;
     const clusterId = Renderer.Catalog.catalogEntities.activeEntity.getId();
-    const apiUrl = `http://${clusterId}.localhost:${location.port}`;
+    const apiUrl = `https://${clusterId}.lens.app:${location.port}`;
 
     const res = await fetch(apiUrl + apiPath, {
       method: "get",

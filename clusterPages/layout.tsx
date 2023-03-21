@@ -9,7 +9,7 @@ export const LayoutPage = (props: any) => {
   useEffect(() => {
     const apiPath = `/api-kube/api/v1/namespaces/services/services/http:cray-sls:80/proxy/v1/hardware`;
     const clusterId = Renderer.Catalog.catalogEntities.activeEntity.getId();
-    const apiUrl = `http://${clusterId}.localhost:${location.port}`;
+    const apiUrl = `https://${clusterId}.lens.app:${location.port}`;
 
     fetch(apiUrl + apiPath, {
       method: "get",
