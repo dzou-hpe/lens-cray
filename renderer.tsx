@@ -1,7 +1,8 @@
 import { Renderer } from "@k8slens/extensions";
-import { ExampleIcon, DashboardPage, LayoutPage } from "./clusterPages";
+import { ExampleIcon, DashboardPage, LayoutPage, IufPage, IufIcon } from "./clusterPages";
 import React from "react";
 import { NodeMenu, NodeMenuProps } from "./components/nodeMenuExt";
+import { SessionDetails } from "./components/iuf";
 
 export default class LensCrayExtension extends Renderer.LensExtension {
   clusterPages = [
@@ -15,6 +16,12 @@ export default class LensCrayExtension extends Renderer.LensExtension {
       id: "layout",
       components: {
         Page: () => <LayoutPage extension={this} />,
+      },
+    },
+    {
+      id: "iuf",
+      components: {
+        Page: () => <IufPage extension={this} />,
       },
     },
   ];
@@ -43,6 +50,14 @@ export default class LensCrayExtension extends Renderer.LensExtension {
         Icon: ExampleIcon,
       },
     },
+    {
+      parentId: "cray",
+      target: { pageId: "iuf" },
+      title: "IUF",
+      components: {
+        Icon: IufIcon,
+      },
+    },
   ];
 
   kubeObjectMenuItems = [
@@ -54,6 +69,19 @@ export default class LensCrayExtension extends Renderer.LensExtension {
       },
     },
   ];
+
+  kubeObjectDetailItems = [
+    {
+      kind: "ConfigMap",
+      apiVersions: ["v1"],
+      priority: 1,
+      components: {
+        Details: (props: Renderer.Component.KubeObjectDetailsProps<Renderer.K8sApi.ConfigMap>) => (
+          <SessionDetails {...props} />
+        )
+      }
+    }
+  ]
 
   async onActivate() {
     console.log("cray plugin activated");
