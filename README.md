@@ -9,3 +9,6 @@ https://user-images.githubusercontent.com/83423760/168389511-31ca4db3-9efa-4e5f-
 
 ### IUF Session
 <img width="2560" alt="image" src="https://user-images.githubusercontent.com/83423760/227078378-5fb28fbc-5f5a-4d9b-9ad1-7e1a25015c82.png">
+
+### System Layout
+<img width="2056" alt="image" src="https://user-images.githubusercontent.com/83423760/227078797-5def5130-80cf-4c1b-b1aa-2a72caa86d17.png">
