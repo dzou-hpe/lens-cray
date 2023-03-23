@@ -1,7 +1,7 @@
 import { Renderer } from "@k8slens/extensions";
 import path from "path";
 import React from "react";
-import { IufSessions } from "../components/iuf";
+import { IufSessions,Argo } from "../components/iuf";
 
 export function IufIcon(props: Renderer.Component.IconProps) {
   return (
@@ -23,6 +23,7 @@ export class IufPage extends React.Component<{
     return (
       <div className="flex column gaps">
         <IufSessions />
+        <Argo/>
       </div>
     );
   }
